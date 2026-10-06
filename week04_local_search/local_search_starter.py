@@ -257,6 +257,70 @@ def simulated_annealing(problem, start_board):
 
 
 # --------------------------------------------------
+# EXTENSIONS
+# --------------------------------------------------
+ 
+def random_board():
+    """
+    Return a random board with one queen in each column.
+    """
+ 
+    return [random.randint(0, N - 1) for _ in range(N)]
+ 
+ 
+# Extension 1 - show the board
+ 
+def show_board(board):
+    """
+    Print the board using Q for a queen
+    and . for an empty square.
+    """
+ 
+    for row in range(len(board)):
+ 
+        line = ""
+ 
+        for column in range(len(board)):
+            if board[column] == row:
+                line = line + "Q "
+            else:
+                line = line + ". "
+ 
+        print(line)
+ 
+ 
+# Extension 2 - random restart hill climbing
+ 
+def random_restart_hill_climbing(max_restarts):
+    """
+    Run Hill Climbing from new random boards until
+    a solution is found or we run out of restarts.
+ 
+    Returns the best board and the number of
+    restarts that were used.
+    """
+ 
+    best = None
+    best_cost = None
+ 
+    for attempt in range(1, max_restarts + 1):
+ 
+        start = random_board()
+        problem = QueensProblem(start)
+        final = hill_climbing(problem, start)
+        cost = count_conflicts(final)
+ 
+        if best is None or cost < best_cost:
+            best = final
+            best_cost = cost
+ 
+        if cost == 0:
+            return best, attempt
+ 
+    return best, max_restarts
+
+
+# --------------------------------------------------
 # TESTING AREA
 # --------------------------------------------------
 
