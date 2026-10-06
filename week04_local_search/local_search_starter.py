@@ -401,7 +401,7 @@ if __name__ == "__main__":
     print("\nSolved out of", runs, "runs")
     print("Hill Climbing:", hc_solved)
     print("Simulated Annealing:", sa_solved)
- 
+    
     # Extension 1
     print("\nExtension 1 - final board from Simulated Annealing")
     start = random_board()
