@@ -160,10 +160,34 @@ def hill_climbing(problem, start_board):
     """
 
     current = start_board
-
-    # TODO
-
-    pass
+    current_cost = count_conflicts(current)
+ 
+    while True:
+ 
+        # a solution has no conflicts, so we can stop
+        if current_cost == 0:
+            return current
+ 
+        neighbours = generate_neighbours(problem, current)
+ 
+        # find the neighbour with the lowest conflict count
+        best_neighbour = neighbours[0]
+        best_cost = count_conflicts(best_neighbour)
+ 
+        for neighbour in neighbours:
+            cost = count_conflicts(neighbour)
+ 
+            if cost < best_cost:
+                best_neighbour = neighbour
+                best_cost = cost
+ 
+        # if the best neighbour is not better, we are stuck
+        if best_cost >= current_cost:
+            return current
+ 
+        # otherwise move to it
+        current = best_neighbour
+        current_cost = best_cost
 
 
 # --------------------------------------------------
