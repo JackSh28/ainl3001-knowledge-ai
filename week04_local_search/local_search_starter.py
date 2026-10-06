@@ -206,13 +206,54 @@ def simulated_annealing(problem, start_board):
     """
 
     current = start_board
-
+ 
     temperature = 10.0
     cooling_rate = 0.95
-
-    # TODO
-
-    pass
+ 
+    # how many random moves we try at each temperature
+    steps_per_temperature = 100
+ 
+    current_cost = count_conflicts(current)
+ 
+    # keep track of the best board we have seen
+    best = current
+    best_cost = current_cost
+ 
+    while temperature > 0.01 and best_cost > 0:
+ 
+        for step in range(steps_per_temperature):
+ 
+            # pick one random neighbour using the Problem interface
+            action = random.choice(problem.actions(current))
+            neighbour = problem.result(current, action)
+            neighbour_cost = count_conflicts(neighbour)
+ 
+            # positive difference means the neighbour is worse
+            difference = neighbour_cost - current_cost
+ 
+            # always accept a better (or equal) board
+            # sometimes accept a worse board
+            if difference <= 0:
+                accept = True
+            else:
+                probability = math.exp(-difference / temperature)
+                accept = random.random() < probability
+ 
+            if accept:
+                current = neighbour
+                current_cost = neighbour_cost
+ 
+                if current_cost < best_cost:
+                    best = current
+                    best_cost = current_cost
+ 
+            if best_cost == 0:
+                break
+ 
+        # cool down
+        temperature = temperature * cooling_rate
+ 
+    return best
 
 
 # --------------------------------------------------
