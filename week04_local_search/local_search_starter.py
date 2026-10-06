@@ -325,37 +325,95 @@ def random_restart_hill_climbing(max_restarts):
 # --------------------------------------------------
 
 if __name__ == "__main__":
-
+ 
     board = [
         random.randint(0, N - 1)
         for _ in range(N)
     ]
-
+ 
     problem = QueensProblem(board)
-
+ 
     print("\nRandom Board")
     print(board)
-
+ 
     print("\nConflicts")
     print(
         count_conflicts(board)
     )
-
+ 
     print("\nPossible Actions")
-
+ 
     actions = problem.actions(board)
-
+ 
     print(
         f"{len(actions)} actions available"
     )
-
+ 
     print("\nNeighbours")
-
+ 
     neighbours = generate_neighbours(
         problem,
         board
     )
-
+ 
     print(
         f"{len(neighbours)} neighbours generated"
     )
+ 
+    # ----------------------------------------------
+    # Tasks 3 and 4 - test
+    # ----------------------------------------------
+ 
+    print("\nTask 0 check: [0, 1, 2, 3] has",
+          count_conflicts([0, 1, 2, 3]), "conflicts")
+ 
+    print("\nHill Climbing - 5 runs")
+ 
+    for attempt in range(1, 6):
+        start = random_board()
+        problem = QueensProblem(start)
+        final = hill_climbing(problem, start)
+        print(attempt, "final cost:", count_conflicts(final))
+ 
+    print("\nSimulated Annealing - 5 runs")
+ 
+    for attempt in range(1, 6):
+        start = random_board()
+        problem = QueensProblem(start)
+        final = simulated_annealing(problem, start)
+        print(attempt, "final cost:", count_conflicts(final))
+ 
+    # compare the two over 100 runs
+    runs = 100
+    hc_solved = 0
+    sa_solved = 0
+ 
+    for _ in range(runs):
+        start = random_board()
+        problem = QueensProblem(start)
+ 
+        if count_conflicts(hill_climbing(problem, start)) == 0:
+            hc_solved += 1
+ 
+        if count_conflicts(simulated_annealing(problem, start)) == 0:
+            sa_solved += 1
+ 
+    print("\nSolved out of", runs, "runs")
+    print("Hill Climbing:", hc_solved)
+    print("Simulated Annealing:", sa_solved)
+ 
+    # Extension 1
+    print("\nExtension 1 - final board from Simulated Annealing")
+    start = random_board()
+    problem = QueensProblem(start)
+    final = simulated_annealing(problem, start)
+    print("Start:", start)
+    show_board(start)
+    print("Final:", final)
+    show_board(final)
+ 
+    # Extension 2
+    print("\nExtension 2 - Random Restart Hill Climbing")
+    board, restarts = random_restart_hill_climbing(20)
+    print("Conflicts:", count_conflicts(board),
+          "after", restarts, "restart(s)")
